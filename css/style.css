@@ -51,7 +51,8 @@ a{color:inherit}
 .brand img{height:54px;width:auto;display:block}
 nav{display:flex;align-items:center;gap:12px}
 nav a{text-decoration:none;color:var(--ink);font-size:18px;font-weight:700;padding:10px 20px;border-radius:999px;transition:background .2s,color .2s}
-nav a:hover{background:rgba(212,162,76,.22);color:var(--accent)}
+nav a{-webkit-tap-highlight-color:transparent}
+@media(hover:hover){nav a:hover{background:rgba(212,162,76,.22);color:var(--accent)}}
 @media(max-width:700px){
   .bar{grid-template-columns:auto 1fr;padding:0 14px;gap:8px}
   .brand{font-size:18px;gap:10px}
@@ -84,6 +85,7 @@ nav a:hover{background:rgba(212,162,76,.22);color:var(--accent)}
 /* foto */
 .hero-foto{position:relative;width:100%;max-width:460px;justify-self:center}
 .hero-foto img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:24px 24px 24px 200px}
+@media(max-width:600px){.hero .stats b{font-size:19px}}
 
 
 /* ==========================================================
@@ -120,7 +122,12 @@ td:first-child{color:var(--muted)}
   #comparar .lead{grid-column:1;grid-row:2;align-self:start;margin:0}
   #comparar .tbl{grid-column:2;grid-row:1 / span 2}
 }
-
+@media(max-width:600px){
+  table{min-width:0;table-layout:fixed}
+  th,td{padding:12px 10px;font-size:15px;overflow-wrap:anywhere}
+  th{font-size:16px}
+  th:first-child,td:first-child{width:26%}
+}
 
 /* ==========================================================
    == 7. O QUE FAZEMOS (#servicos)
@@ -257,12 +264,15 @@ body:has(dialog[open]){overflow:hidden}
 .whats-flutuante{position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#25d366;color:#fff;font-size:32px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.28);transition:bottom .3s ease,transform .2s}
 .whats-flutuante:hover{transform:scale(1.08)}
 .bottombar.visible ~ .whats-flutuante{bottom:84px}
+.whats-flutuante{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.bottombar.visible ~ .whats-flutuante{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media(max-width:600px){.whats-flutuante{width:50px;height:50px;font-size:28px;right:14px}}
 
 
 /* ==========================================================
    == 13. RODAPÉ (endereço, mapa, links legais)
    ========================================================== */
-footer{padding:44px 0 24px;margin-bottom:64px;color:rgba(255,255,255,.78);font-size:14px;background:var(--ink);box-shadow:0 0 0 100vmax var(--ink);clip-path:inset(0 -100vmax)}
+footer{padding:44px 0 24px;margin-bottom:calc(64px + env(safe-area-inset-bottom,0px));color:rgba(255,255,255,.78);font-size:14px;background:var(--ink);box-shadow:0 0 0 100vmax var(--ink);clip-path:inset(0 -100vmax)}
 footer p{margin:0 0 8px}
 footer .addr{color:#fff}
 footer a{color:#fff}
