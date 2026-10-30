@@ -107,3 +107,67 @@ formContato.addEventListener('submit', function (e) {
       botao.textContent = 'Enviar mensagem';
     });
 });
+/* ==========================================================
+   6. ANIMAÇÃO: CONTEÚDO ENTRA PELAS LATERAIS AO ROLAR
+   Cada linha: ['seletor', 'direção']
+   direção: 'da-esq' (vem da esquerda), 'da-dir' (vem da direita), 'da-baixo'
+   ========================================================== */
+(function () {
+  var grupos = [
+    /* topo */
+    ['.hero-texto', 'da-esq'],
+    ['.hero-foto', 'da-dir'],
+    /* por que ter um contador */
+    ['#comparar h2, #comparar .lead', 'da-esq'],
+    ['#comparar .tbl', 'da-dir'],
+    /* o que fazemos */
+    ['.servicos-foto', 'da-esq'],
+    ['.servicos-texto', 'da-dir'],
+    /* planos */
+    ['#planos h2, #planos .lead', 'da-esq'],
+    ['.plan:nth-child(1)', 'da-esq'],
+    ['.plan:nth-child(2)', 'da-baixo'],
+    ['.plan:nth-child(3)', 'da-dir'],
+    /* depoimentos */
+    ['#depoimentos h2, #depoimentos .lead', 'da-esq'],
+    ['.grid3 blockquote:nth-child(1)', 'da-esq'],
+    ['.grid3 blockquote:nth-child(2)', 'da-baixo'],
+    ['.grid3 blockquote:nth-child(3)', 'da-dir'],
+    /* dúvidas */
+    ['#duvidas h2', 'da-esq'],
+    ['.faq', 'da-dir'],
+    /* rodapé */
+    ['.rodape-info', 'da-esq'],
+    ['.mapa-box', 'da-dir']
+  ];
+
+  var itens = [];
+  grupos.forEach(function (g) {
+    document.querySelectorAll(g[0]).forEach(function (el) {
+      el.classList.add('revela', g[1]);
+      itens.push(el);
+    });
+  });
+
+  /* navegador antigo: mostra tudo sem animar */
+  if (!('IntersectionObserver' in window)) {
+    itens.forEach(function (el) { el.classList.add('visivel'); });
+    return;
+  }
+
+  var observador = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      el.classList.add('visivel');
+      observador.unobserve(el);   /* anima só na primeira vez */
+      /* depois da animação, tira as classes para não atrapalhar
+         os efeitos de hover dos planos e botões */
+      setTimeout(function () {
+        el.classList.remove('revela', 'da-esq', 'da-dir', 'da-baixo', 'visivel');
+      }, 1000);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+
+  itens.forEach(function (el) { observador.observe(el); });
+})();

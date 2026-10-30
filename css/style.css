@@ -286,3 +286,144 @@ footer .btn.alt{background:none;color:#fff;border:1.5px solid rgba(255,255,255,.
 .mapa-box{min-height:0;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07)}
 .mapa-box iframe{width:100%;height:240px;min-height:0;border:0;display:block}
 .rodape-legal{margin:28px 0 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+/* ==========================================================
+   ANIMAÇÃO: conteúdo entra pelas laterais ao rolar
+   ========================================================== */
+.revela{
+  --desloca:clamp(48px,12vw,140px);   /* distância de onde o bloco "vem" */
+  opacity:0;
+  transition:opacity .8s ease,transform .8s cubic-bezier(.22,.61,.36,1);
+  will-change:opacity,transform;
+}
+.revela.da-esq{transform:translateX(calc(-1 * var(--desloca)))}
+.revela.da-dir{transform:translateX(var(--desloca))}
+.revela.da-baixo{transform:translateY(40px)}
+.revela.visivel{opacity:1;transform:none}
+
+/* quem tem "reduzir movimento" ligado no aparelho vê tudo parado */
+@media(prefers-reduced-motion:reduce){
+  .revela{opacity:1;transform:none!important;transition:none}
+}/* ==========================================================
+   TRAÇO DOURADO EMBAIXO DOS TÍTULOS
+   ========================================================== */
+section h2::after{
+  content:"";
+  display:block;
+  width:56px;
+  height:4px;
+  margin-top:14px;
+  border-radius:4px;
+  background:var(--gold);
+}/* ==========================================================
+   ÍCONES NA LISTA "O QUE FAZEMOS"
+   ========================================================== */
+.servicos-texto .svc li{
+  grid-template-columns:52px 1fr;
+  column-gap:16px;
+  align-items:center;
+}
+.svc li i{
+  grid-row:1 / span 2;
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  font-size:20px;
+  color:var(--accent);
+  background:color-mix(in srgb,var(--gold) 24%,transparent);
+}/* ==========================================================
+   MARCADOR "MAIS ESCOLHIDO" (fita de marca-página)
+   Aparece ao passar o mouse no plano Empresa
+   ========================================================== */
+.plan--destaque::after{
+  content:"★\A MAIS\A ESCOLHIDO";
+  white-space:pre;
+  box-sizing:border-box;
+  position:absolute;
+  top:0;
+  right:24px;
+  z-index:2;
+  width:104px;
+  padding:14px 6px 30px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.35;
+  letter-spacing:.04em;
+  color:var(--ink);
+  background:var(--gold);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%);   /* ponta em V */
+  transform:translateY(-100%);                              /* escondida */
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+@media(hover:hover){
+  .plan--destaque:hover::after{transform:translateY(0)}
+}
+/* celular e tablet (sem mouse): a fita fica sempre visível */
+@media(hover:none){
+  .plan--destaque::after{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .plan--destaque::after{transition:none}
+}/* ==========================================================
+   ÍCONES NO MENU DO TOPO
+   ========================================================== */
+nav a{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;          /* espaço entre o ícone e o texto */
+}
+nav a i{
+  font-size:.9em;
+  color:var(--accent);
+}
+/* celular pequeno: some o ícone para o menu não estourar a largura */
+@media(max-width:600px){
+  nav a i{display:none}
+}/* ==========================================================
+   BOTÕES: TODOS EM FORMATO PÍLULA
+   ========================================================== */
+.btn{border-radius:999px}
+/* ==========================================================
+   CARDS: SOMBRA SUAVE E LEVE ELEVAÇÃO NO HOVER
+   (serviços, depoimentos e perguntas frequentes)
+   ========================================================== */
+
+/* espaço interno extra e cantos arredondados, com margem negativa
+   para o texto continuar alinhado onde estava */
+.servicos-texto .svc li{margin-inline:-16px;padding-inline:16px;border-radius:14px}
+.faq details{margin-inline:-14px;padding-inline:14px;border-radius:10px}
+
+/* suaviza a subida */
+blockquote,
+.servicos-texto .svc li,
+.faq details{
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
+}
+
+/* só em aparelhos com mouse (no celular o efeito ficaria "preso" depois do toque) */
+@media(hover:hover){
+  blockquote:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 28px rgba(34,42,59,.14);
+  }
+  .servicos-texto .svc li:hover{
+    background:#fff;
+    border-bottom-color:transparent;
+    transform:translateY(-3px);
+    box-shadow:0 10px 24px rgba(34,42,59,.12);
+  }
+  .faq details:hover{
+    background:#fff;
+    border-bottom-color:transparent;
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(34,42,59,.12);
+  }
+}
+
+/* quem desativou animações no aparelho não vê a subida */
+@media(prefers-reduced-motion:reduce){
+  blockquote,.servicos-texto .svc li,.faq details{transition:none}
+  blockquote:hover,.servicos-texto .svc li:hover,.faq details:hover{transform:none!important}
+}
