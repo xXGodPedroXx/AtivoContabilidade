@@ -426,4 +426,13 @@ blockquote,
 @media(prefers-reduced-motion:reduce){
   blockquote,.servicos-texto .svc li,.faq details{transition:none}
   blockquote:hover,.servicos-texto .svc li:hover,.faq details:hover{transform:none!important}
+}/* ==========================================================
+   CORREÇÃO PARA CELULAR (evita o site "encolhido" ou com sobra lateral)
+   ========================================================== */
+html{overflow-x:hidden}
+img,iframe,video{max-width:100%}
+
+/* no celular os blocos entram de mais perto, sem sair da tela */
+@media(max-width:700px){
+  .revela{--desloca:28px}
 }
