@@ -435,4 +435,28 @@ img,iframe,video{max-width:100%}
 /* no celular os blocos entram de mais perto, sem sair da tela */
 @media(max-width:700px){
   .revela{--desloca:28px}
+}/* ==========================================================
+   TABELA "COM A ATIVO" x "SEM ACOMPANHAMENTO"
+   ========================================================== */
+
+/* cantos arredondados: a borda passa do <table> para a caixa que o envolve */
+.tbl{
+  border:1px solid var(--line);
+  border-radius:16px;
 }
+.tbl table{border:0}
+.tbl tbody tr:last-child td{border-bottom:0}
+
+/* cabeçalho da coluna da Ativo em dourado */
+.tbl th:nth-child(2){
+  background:var(--gold);
+  color:var(--ink);
+}
+
+/* ícones ✓ e ✕ coloridos */
+.tbl td i{
+  margin-right:10px;
+  font-size:1.05em;
+}
+.tbl td i.ok{color:#2e8b57}
+.tbl td i.nao{color:#c0392b}

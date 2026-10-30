@@ -8,7 +8,16 @@
    4. Barra inferior (aparece ao rolar)
    5. Janela "Fale conosco" e envio do formulário
    ========================================================== */
-
+/* ==========================================================
+   0. SEMPRE COMEÇAR NO TOPO AO CARREGAR O SITE
+   ========================================================== */
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.addEventListener('pageshow', function () {
+  /* se o endereço tem um #, como "#planos", respeita e vai até a seção */
+  if (!location.hash) window.scrollTo(0, 0);
+});
 /* ==========================================================
    1. CONFIGURAÇÕES  (é o que você mais vai querer trocar)
    ========================================================== */
@@ -170,4 +179,80 @@ formContato.addEventListener('submit', function (e) {
   }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
 
   itens.forEach(function (el) { observador.observe(el); });
+})();/* ==========================================================
+   7. NÚMEROS DO TOPO CONTANDO DE ZERO
+   Anima os números dentro de ".hero .stats b" (ex.: "+30 anos", "+100")
+   ========================================================== */
+(function () {
+  var caixa = document.querySelector('.hero .stats');
+  if (!caixa) return;
+
+  var itens = [];
+  caixa.querySelectorAll('b').forEach(function (b) {
+    var achado = b.textContent.match(/\d+/);
+    if (!achado) return;                       /* sem número: não anima */
+    itens.push({
+      el: b,
+      texto: b.textContent,                    /* texto original, ex.: "+30 anos" */
+      achado: achado[0],                       /* o número dentro dele, ex.: "30" */
+      alvo: parseInt(achado[0], 10)
+    });
+  });
+  if (!itens.length) return;
+
+  /* quem desativou animações, ou navegador antigo: mantém os números prontos */
+  if (!('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var DURACAO = 1500;                          /* em milissegundos */
+
+  function anima(item) {
+    var inicio = null;
+    item.el.textContent = item.texto.replace(item.achado, '0');
+    function passo(t) {
+      if (!inicio) inicio = t;
+      var p = Math.min((t - inicio) / DURACAO, 1);
+      var suave = 1 - Math.pow(1 - p, 3);      /* começa rápido e termina devagar */
+      item.el.textContent = item.texto.replace(item.achado, Math.round(item.alvo * suave));
+      if (p < 1) requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
+  }
+
+  var observador = new IntersectionObserver(function (entradas) {
+    entradas.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      observador.unobserve(e.target);          /* conta só uma vez */
+      itens.forEach(anima);
+    });
+  }, { threshold: 0.4 });
+
+  observador.observe(caixa);
+})();/* ==========================================================
+   8. MÁSCARA DO TELEFONE NO FORMULÁRIO  →  (44) 99999-9999
+   ========================================================== */
+(function () {
+  var campo = document.getElementById('telefone');
+  if (!campo) return;
+
+  campo.maxLength = 15;            /* tamanho de "(44) 99999-9999" */
+  campo.placeholder = '(44) 99999-9999';
+
+  function formata(valor) {
+    var d = valor.replace(/\D/g, '');
+    if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(2);  /* colou com +55 */
+    d = d.slice(0, 11);
+    if (d.length === 0) return '';
+    if (d.length <= 2) return '(' + d;
+    if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+  }
+
+  campo.addEventListener('input', function () {
+    campo.value = formata(campo.value);
+    var digitos = campo.value.replace(/\D/g, '').length;
+    /* exige DDD + número (fixo com 10 dígitos ou celular com 11) */
+    campo.setCustomValidity(digitos > 0 && digitos < 10 ? 'Digite o telefone com DDD. Ex.: (44) 99999-9999' : '');
+  });
 })();
